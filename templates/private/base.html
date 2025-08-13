@@ -1,0 +1,25 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block navbar %}
+{% include './navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-xl-2  sidenav">
+            {% include './menu.html' %}
+        </div>
+        <div class="col-xl-10 sidenav">
+            {% include './control.html' %}
+            {% block detail %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% include '../footer.html' %}
+{% endblock %}

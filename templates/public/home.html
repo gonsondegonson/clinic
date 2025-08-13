@@ -1,7 +1,19 @@
-<html>
-<body>
-    <p>Hi there!</p>
-    <p>It works!</p>
-    <p>This is My PUBLIC Home!</p>
-</body>
-</html>
+{% extends './base.html' %}
+
+{% block title %}
+    {% for section in Sections %}
+        {% if section.current == True %}
+            {{Site.company.name}} - {{section.description}}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block detail %}
+    <p>Site: {{Site.company.id}}</p>
+    <p>idSection: {{idSection}}</p>
+    {% for section in Sections %}
+        <p>Section {{section.id}}: {{section.name}} Current: {{section.current}}</p>
+        <p>{{section.url}}</p>
+    {% endfor %}
+
+{% endblock %}

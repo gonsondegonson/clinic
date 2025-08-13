@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@1d^)3(m6mgh+(-ktx5u8ttm8*qc!sg9zt-wvpemn*kojq&g7t'
+SECURE_KEY = 'O3PDVrmtx4R0oh22Vc6Bm4fLjkA3ZtZ_wP3b3j6PfFc='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'member.apps.MemberConfig',
+    'mypublicapp.apps.MyPublicAppConfig',
+    'myprivateapp.apps.MyPrivateAppConfig',
 ]
 
 MIDDLEWARE = [
@@ -115,10 +117,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
