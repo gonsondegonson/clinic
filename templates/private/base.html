@@ -2,8 +2,10 @@
 {% load static %}
 
 {% block navbar %}
+<div class="container-fluid">
 {% include './navbar.html' %}
 {% endblock %}
+</div>
 
 {% block content %}
 <div class="container-fluid">
@@ -21,5 +23,7 @@
 {% endblock %}
 
 {% block footer %}
+<div class="container-fluid">
 {% include '../footer.html' %}
+</div>
 {% endblock %}

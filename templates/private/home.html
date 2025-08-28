@@ -1,4 +1,5 @@
 {% extends './base.html' %}
+{% load static %}
 
 {% block title %}This is My TITLE!{% endblock %}
 
@@ -10,6 +11,13 @@
     <p>STATIC_URL: {{STATIC_URL}}</p>
     <p>STATIC_ROOT: {{STATIC_ROOT}}</p>
     <p>STATICFILES_DIRS: {{STATICFILES_DIRS}}</p>
+    <p>idOption: {{idOption}}</p>
+    <p>URL: {{URL}}</p>
+	<a href="{{URL}}">This is My URL!</a>
+<svg class="bi" width="32" height="32" fill="currentColor">
+  <use xlink:href="{% static 'bootstrap/icons/bootstrap-icons.svg' %}#shop"/>
+</svg>
+<img src="{% static 'bootstrap/icons/shop.svg' %}" alt="Bootstrap" width="24" height="24">
     <p>It works!</p>
     <p>It works!</p>
     <p>It works!</p>

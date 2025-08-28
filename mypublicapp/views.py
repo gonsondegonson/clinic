@@ -5,22 +5,24 @@ from mypublicapp.models import Site
 from mysite import functions
 
 def home(request):
-    # Get list of parameters from URL request
+    # Get list of parameters from URL request using project secret
     parmList = functions.parm_list(request, None)
 
     # Get Site object using Company Id received
     site = getSite(parmList.get("idCompany"), request.get_host())
+    if site.url == request.get_host():
+        # Get list of Sections for the Site
+        sections = getSections(site.company.id, parmList.get("idSection"))
 
-    # Get list of Sections for the Site
-    sections = getSections(site.company.id, parmList.get("idSection"))
+        #Get list of Contents for the Section
 
-    #Get list of Contents for the Section
-
-    return render(request, 'public/home.html', 
-        {'Site': site, 'Sections': sections, })
+        return render(request, 'public/home.html', 
+            {'Site': site, 'Sections': sections, })
+    #else:
+        #Error#
 
 def getSite(idCompany, host):
-
+    # Get Site Object
     if idCompany == None:
         # Get Site object using host received in URL
         site = Site.objects.get(url = host)
@@ -29,7 +31,6 @@ def getSite(idCompany, host):
         site = Site.objects.get(id = idCompany)
 
     return site
-
 
 def getSections(idSite, idSection):
     # Get list of Sections for the Site

@@ -1,8 +1,14 @@
 {% extends '../base.html' %}
 {% load static %}
 
+{% block header %}
+<div class="container-fluid">
+{% include './header.html' %}
+</div>
+{% endblock %}
+
 {% block navbar %}
-<div class="container"></div>
+<div class="container-fluid">
 {% include './navbar.html' %}
 </div>
 {% endblock %}
@@ -21,5 +27,7 @@
 {% endblock %}
 
 {% block footer %}
+<div class="container-fluid">
 {% include '../footer.html' %}
+</div>
 {% endblock %}

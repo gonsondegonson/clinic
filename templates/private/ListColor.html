@@ -1,0 +1,42 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block title %}Lista de {{ entity.label }}{% endblock %}
+
+{% block detail %}
+    <h2><a href="">PRUEBA DE LISTAS</a></h2>
+    <p>Hi theres!</p>
+    <p>It works!</p>
+    <p>This is My First List!  {{ site }}</p>
+    <p>{{ url1 }}</p>
+    <p>{{ url2 }}</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+{% for field in entity.entityFields %}
+                <th scope="col">{% if field.url %}<a href="{{ field.url }}"</a>{% endif %}
+                        {{ field.label }}
+                    {% if field.iconUp %}<img src="{% static 'bootstrap/icons/arrow-down.svg' %}">{% endif %}
+                    {% if field.iconDown %}<img src="{% static 'bootstrap/icons/arrow-up.svg' %}">{% endif %}
+                </th>
+{% endfor %}
+            </tr>  
+        </thead>
+        <tbody>
+{% for color in colors %}
+            <tr class="table-row" data-href="{{ color.url }}">
+                <td>{{ color.name }}</td>
+                <td style="background-color: {{ color.value }}">{{ color.value }}  {{ color.RGB }}</td>
+            </tr>
+{% endfor %}
+        </tbody>  
+    </table>
+</div>
+
+<script>
+
+</script>
+
+{% endblock %}

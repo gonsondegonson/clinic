@@ -1,5 +1,6 @@
 <!-- Custom Navbar for this template -->
-<nav class="navbar fixed-top" style="background-color:#92c9eb;">
+{% load static %}
+<nav class="navbar fixed-top" style="background-color:{{site.navbarColor.value}}">
 	<div class="container-fluid">	
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -8,9 +9,10 @@
 				<span class="icon-bar" style="color:black;"></span>                        
 			</button>      
 			<a class="navbar-brand" href="#" style="color:black;" title="C.F. Cubas Feminas">
-				<img style="max-width:40px; margin-top: -12px; margin-left: -10px;" src="static/images/Escudo.jpg" alt="Escudo">
+				<img style="max-width:40px; margin-top: -12px; margin-left: -10px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
 			</a>
-			<a class="navbar-brand" href="#" style="color:black;">This is My NavBar!</a>
+			<a class="navbar-brand" href="#" style="color:black;">  {{site.company.name}}</a>
+			<a class="navbar-brand" href="#" style="color:black;">  {{member}}</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">

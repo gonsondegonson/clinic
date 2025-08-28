@@ -23,7 +23,6 @@ def decrypt_msg(msg, secret):
     decrypted_msg = fnet.decrypt(msg)
     return decrypted_msg.decode()
 
-
 def parm_list(request, secret):
     # Initialize parameter list
     parmList = {}
@@ -43,3 +42,23 @@ def parm_list(request, secret):
             parmList[parm[0]] = parm[1]
 
     return parmList
+
+def getParameter(parmList, parmName, defValue):
+    # Get parameter from parameter list
+    parmValue = parmList.get(parmName)
+    # If not found, returnd default value
+    if parmValue == None:
+        parmValue = defValue
+    
+    return parmValue
+
+def getUrlEncoded(parmList, url, secret):
+    # Get secret key
+    if (secret == None or secret == ''):
+        secret = settings.SECURE_KEY
+
+    # Build url message including always Company Id
+    urlMsg = 'idCompany=' + str(parmList.get("idCompany")) + '|' + url
+
+    # Return url encrypted
+    return ('?key=' + encrypt_msg(urlMsg, secret))
