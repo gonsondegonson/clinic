@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block control %}
+    {% include '../control.html' %}
+{% endblock %}
+
+{% block tablelist %}
+    <td>{{ record.name }}</td>
+    <td><span class="{{record.value}}"></span>  {{ record.value }}</td>
+{% endblock %}

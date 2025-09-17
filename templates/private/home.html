@@ -4,20 +4,69 @@
 {% block title %}This is My TITLE!{% endblock %}
 
 {% block detail %}
-    <h2><a href="">PRUEBA DE CSS</a></h2>
     <p>Hi theres!</p>
     <p>It works!</p>
     <p>This is My PRIVATE Home!</p>
-    <p>STATIC_URL: {{STATIC_URL}}</p>
-    <p>STATIC_ROOT: {{STATIC_ROOT}}</p>
-    <p>STATICFILES_DIRS: {{STATICFILES_DIRS}}</p>
-    <p>idOption: {{idOption}}</p>
+    <h1>Mi Árbol de Datos</h1>
+    <p>Menú: {{session.member.company.site.menu.id}} </p>
+    {% for item1 in session.member.company.site.menu.itemList %}
+        {% if item1.child.itemList %}
+            <p>MENU: Parent: {{item1.parent.label}}   Child: {{item1.child.label}}  Perm: {{item1.hasPerm}}  URL: {{item1.url}}</p>
+            {% for item2 in item1.child.itemList %}
+                {% if item2.child.itemList %}
+                    <p>MENU: Parent: {{item2.parent.label}}   Child: {{item2.child.label}}  Perm: {{item2.hasPerm}}  URL: {{item2.url}}</p>
+                    {% for item3 in item2.child.itemList %}
+                        {% if item3.child.itemList %}
+                            <p>MENU: Parent: {{item3.parent.label}}   Child: {{item3.child.label}}  Perm: {{item3.hasPerm}}  URL: {{item3.url}}</p>
+                            {% for item4 in item3.child.itemList %}
+                                {% if item4.child.itemList %}
+                                    <p>MENU: Parent: {{item4.parent.label}}   Child: {{item4.child.label}}  Perm: {{item4.hasPerm}}  URL: {{item4.url}}</p>
+                                    {% for item5 in item4.child.itemList %}
+                                        {% if item5.child.itemList %}
+                                            <p>MENU: Parent: {{item5.parent.label}}   Child: {{item5.child.label}}  Perm: {{item5.hasPerm}}  URL: {{item5.url}}</p>
+                                        {% else %}
+                                            <p>OPTION: Parent: {{item5.parent.label}}   Child: {{item5.child.label}}  Perm: {{item5.hasPerm}}  URL: {{item5.url}}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <p>OPTION: Parent: {{item4.parent.label}}   Child: {{item4.child.label}}  Perm: {{item4.hasPerm}}  URL: {{item4.url}}</p>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <p>OPTION: Parent: {{item3.parent.label}}   Child: {{item3.child.label}}  Perm: {{item3.hasPerm}}  URL: {{item3.url}}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>OPTION: Parent: {{item2.parent.label}}   Child: {{item2.child.label}}  Perm: {{item2.hasPerm}}  URL: {{item2.url}}</p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>OPTION: Parent: {{item1.parent.label}}   Child: {{item1.child.label}}  Perm: {{item1.hasPerm}}  URL: {{item1.url}}</p>
+        {% endif %}
+    {% endfor %}
+    <h1>Mi Árbol de Datos</h1>
+    <p>UserReq: {{request.user}}</p>
+    <p>UserSes: {{member.user}}</p>
+    <p>Id: {{entity.id}}</p>
+    <p>App: {{entity.app}}</p>
+    <p>Name: {{entity.name}}</p>
+    <p>Label: {{entity.label}}</p>
+    <p>ListOption: {{entity.listOption}}  {{entity.listUrl}}</p>
+    <p>EditOption: {{entity.editOption}}  {{entity.editUrl}}</p>
+    {% for field in entity.fields %}
+    <p>Id: {{field.id}}  Entity: {{field.entity}}  Name: {{field.name}}  Label: {{field.label}}  Order: {{field.order}}</p>
+    {% endfor %}
+    <p>AuthView: {{entity.auth.view}}</p>
+    <p>AuthAdd: {{entity.auth.add}}</p>
+    <p>AuthChange: {{entity.auth.change}}</p>
+    <p>AuthDelete: {{entity.auth.delete}}</p>
+    <p>AuthExport: {{entity.auth.export}}</p>
+    <p>AuthExecute: {{entity.auth.execute}}</p>
+    {% for option in entity.options %}
+    <p>Id: {{option.id}}  Entity: {{option.entity}}  Type: {{option.type}}  Option: {{option.option}}  Order: {{field.order}}</p>
+    {% endfor %}
     <p>URL: {{URL}}</p>
 	<a href="{{URL}}">This is My URL!</a>
-<svg class="bi" width="32" height="32" fill="currentColor">
-  <use xlink:href="{% static 'bootstrap/icons/bootstrap-icons.svg' %}#shop"/>
-</svg>
-<img src="{% static 'bootstrap/icons/shop.svg' %}" alt="Bootstrap" width="24" height="24">
     <p>It works!</p>
     <p>It works!</p>
     <p>It works!</p>

@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
 	<meta name=”author” content=”Gonson”>
-	<meta name=”description” content=”{{Site.company.name}} Web Site”>
+	<meta name=”description” content=”{{member.company.name}} Web Site”>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,50 +11,44 @@
 	<title>
 		{% block title %}{% endblock %}
 	</title>
-<!-- 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">	
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="{% static 'fontawesome/6.7.2/css/fontawesome.min.css' %}" type="text/css" rel="stylesheet">
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
--->
 	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet">
-
+	<link href="{% static 'bootstrap/icons/bootstrap-icons.min.css' %}" type="text/css" rel="stylesheet">
+	<link href="{% static 'fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
-	<link href="{% static 'css/mycss.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/mycss.css' %}" type="text/css" rel="stylesheet">
+	
 	{% block href %}{% endblock %}
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-	<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/popper.min.js' %}"></script>
 	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'fontawesome/js/all.min.js' %}"></script>
+
 	{% block src %}{% endblock %}
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+}
+</style>
 
 </head>
 
-<body>
+<body style="background-color:{% if session.member.company.site %}{{session.member.company.site.backgroundColor.value}}{% else %}{{site.backgroundColor.value}}{% endif %}">
+
 	{% block header %}{% endblock %}
-
-	{% block navbar %}{% endblock %}
-
-	{% block content %}{% endblock %}
-
+	{% block main %}{% endblock %}
 	{% block footer %}{% endblock %}
 
-	<script>
+<script>
 	$(document).ready(function(){
 	    $('[data-toggle="tooltip"]').tooltip();
 	});
+</script>
 
-	$(document).ready(function($) {
-        $(".table-row").click(function() {
-            window.document.location = $(this).data("href");
-        });
-    });
-	</script>
+{% block script %}{% endblock %}
+
 </body>
 </html>

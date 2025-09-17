@@ -1,54 +1,31 @@
 <!-- Custom Navbar for this template -->
 {% load static %}
-<nav class="navbar fixed-top" style="background-color:{{site.navbarColor.value}}">
-	<div class="container-fluid">	
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-				<span class="icon-bar" style="color:black;"></span>
-				<span class="icon-bar" style="color:black;"></span>
-				<span class="icon-bar" style="color:black;"></span>                        
-			</button>      
-			<a class="navbar-brand" href="#" style="color:black;" title="C.F. Cubas Feminas">
-				<img style="max-width:40px; margin-top: -12px; margin-left: -10px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
-			</a>
-			<a class="navbar-brand" href="#" style="color:black;">  {{site.company.name}}</a>
-			<a class="navbar-brand" href="#" style="color:black;">  {{member}}</a>
-		</div>
-		<div class="collapse navbar-collapse" id="myNavbar">
-			<ul class="nav navbar-nav">
-				<li><a href="#" style="color:rgb(250, 248, 248);"><span class="fa fa-home"></span> Inicio</a></li>
-				<li><a href="#" style="color:black;"><span class="fa fa-newspaper-o"></span> Noticias</a></li>
-				<li><a href="#" style="color:black;"><span class="fa fa-university"></span> Club</a></li>
-				<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color:black;"><span class="fa fa-futbol-o"> Equipos</span></a>
-					<ul class="dropdown-menu">
-						<li><a href="#"><span class="fa fa-users"> Plantilla</a></li>
-						<li><a href="#"><span class="fa fa-user"> Entrenadores</a></li>
-						<li><a href="#"><span class="fa fa-calendar"> Calendario</a></li>
-						<li><a href="#"><span class="fa fa-table"> Clasificacion</a></li>
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color:{{session.member.company.site.navbarColor.value}}">
+	<div class="container-fluid">
+		<button class="btn btn-outline-dark btn-sm" type="button" data-toggle="tooltip" data-placement="right" title="Menú de {{session.member.name}}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+			<span class="fa-solid fa-bars"></span>
+		</button>
+		<a class="navbar-brand" href="#" style="color:black;" title="{{session.member.company.name}}">
+			<img style="max-width:40px; margin-left: 20px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
+				{{session.member.company.name}}   {{session.member}}
+		</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+			<ul class="navbar-nav">
+				<li class="nav-item dropdown">
+					<button class="btn btn-outline-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						<span class="fa-solid fa-heart"></span>
+						Favoritos
+					</button>
+					<ul class="dropdown-menu" style="background-color:{{session.member.company.site.backgroundColor.value}}">
+						{% for item in session.menuList %}{% if item.hasPerm == True %}
+						<li><a class="dropdown-item" href="{{item.url}}"><span class="{{item.icon.value}}"></span>	{{ item.label }}</a></li>
+						{% endif %}{% endfor %}
 					</ul>
 				</li>
-				<li><a href="#" style="color:black;"><span class="fa fa-building"></span> Instalaciones</a></li>
-				<li><a href="#" style="color:black;"><span class="fa fa-picture-o"></span> Galeria</a></li>
-				<li><a href="#" style="color:black;"><span class="fa fa-envelope"></span> Contacto</a></li>
-				<form class="navbar-form navbar-right" action="#">
-					<div class="input-group">
-						<input type="text" class="form-control" placeholder="Buscar..." name="search">
-						<div class="input-group-btn">
-							<button class="btn btn-default" type="submit">
-								<i style="color:black;" class="fa fa-search"></i>
-							</button>
-						</div>
-					</div>
-				</form>
 			</ul>
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="https://www.facebook.com/cdf.cubasfeminas" style="color:black;" title="Siguenos en Facebook" target="_blank"><span class="fa fa-facebook"></span></a></li>
-				<li><a href="https://twitter.com/cfcubasfeminas" style="color:black;" title="Siguenos en Twitter" target="_blank"><span class="fa fa-twitter"></span></a></li>
-				<li><a href="https://plus.google.com/u/0/117879003912567814711" style="color:black;" title="Siguenos en Google+" target="_blank"><span class="fa fa-google-plus-official"></span></a></li>
-				<li><a href="https://www.youtube.com/channel/UCey3LFqn8p92Ih0w4Hq6EGw/featured" style="color:black;" title="Siguenos en YouTube" target="_blank"><span class="fa fa-youtube"></span></a></li>
-				<li><a href="#" style="color:black;"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-			</ul>
-	  </div>
+		</div>
 	</div>
 </nav>

@@ -1,9 +1,0 @@
-<div class="container">
-    <table class='table table-bordered table-condensed table-striped table-hover'>
-        <tr><th>Name</th><th>Email</th><th>Country</th></tr>
-        <tr class="table-row"data-href="http://tutorialsplane.com"><td>Jhohn</td><td>jhone@gmail.com</td><td>USA</td></tr>
-        <tr class="table-row" data-href="http://tutorialsplane.com"><td>Kelly</td><td>kelly@gmail.com</td><td>USA</td></tr>
-        <tr class="table-row" data-href="http://tutorialsplane.com"><td>Kamana</td><td>kamna@gmail.com</td><td>India</td></tr>
-        <tr class="table-row" data-href="http://tutorialsplane.com"><td>Anay</td><td>anay@gmail.com</td><td>Canada</td></tr>
-    </table>
-</div>

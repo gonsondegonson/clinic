@@ -1,0 +1,27 @@
+<div class="modal fade" id="miModal{{record.id}}" tabindex="-1" aria-labelledby="miModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="miModalLabel">Editar {{record}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{record.editUrl}}" class="post-form">{% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_name" class="col-form-label">Nombre:</label>
+                        <input type="text" class="form-control" name="name" value="{{record.name}}" maxlength="25" required id="id_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="id_value" class="col-form-label">Color:</label>
+                        <input type="text" class="form-control" name="value" value="{{record.value}}" maxlength="10" required id="id_value">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" name="delete" class="btn btn-outline-danger"><span class="fa-solid fa-trash-can"></span> Borrar</button>
+                <button type="submit" name="save" class="btn btn-outline-success"><span class="fa-solid fa-floppy-disk"></span> Guardar</button>
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal"><span class="fa-solid fa-rectangle-xmark"></span>    Salir</button>
+            </div>        
+        </div>
+    </div>
+</div>

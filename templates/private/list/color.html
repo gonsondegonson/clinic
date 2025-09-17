@@ -1,0 +1,13 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block control %}
+    {% include '../control.html' %}
+    {% include '../edit/micolor.html' %}
+{% endblock %}
+
+{% block tablelist %}
+<td>{{ record.name }}</td>
+<td style="background-color: {{record.value}}">{{record.value}}  {{record.RGB}}</td>
+{{record.modal}}
+{% endblock %}

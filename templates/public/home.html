@@ -1,23 +1,16 @@
 {% extends './base.html' %}
 
 {% block title %}
-    {% for section in Sections %}
+    {% for section in sections %}
         {% if section.current == True %}
-            {{Site.company.name}} - {{section.description}}
+            {{site.company.name}} - {{section.description}}
         {% endif %}
     {% endfor %}
 {% endblock %}
 
 {% block detail %}
-    <p>Site: {{Site.company.id}}</p>
-    <p>Site: {{Site.company.id}}</p>
-    <p>Site: {{Site.company.id}}</p>
-    <p>Site: {{Site.company.id}}</p>
-    <p>Site: {{Site.company.id}}</p>
-    <p>idSection: {{idSection}}</p>
-    {% for section in Sections %}
+    {% for section in sections %}
         <p>Section {{section.id}}: {{section.name}} Current: {{section.current}}</p>
         <p>{{section.url}}</p>
     {% endfor %}
-
 {% endblock %}

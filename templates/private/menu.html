@@ -1,92 +1,113 @@
-        <div class="flex-shrink-0 p-3" style="width: 280px;"> <a href="/"
-                class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom"> <svg
-                    class="bi pe-none me-2" width="30" height="24" aria-hidden="true">
-                    <use xlink:href="#bootstrap"></use>
-                </svg> <span class="fs-5 fw-semibold">Collapsible</span> </a>
-            <ul class="list-unstyled ps-0">
-                <li class="mb-1"> <button
-                        class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-                        Home
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel" style="background-color:{{ session.member.company.site.backgroundColor.value }}">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><span class="fa-solid fa-sitemap"></span> Menú de {{session.member.name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav">
+    {% for item1 in session.member.company.site.menu.itemList %}
+        {% if item1.child.itemList %}
+        <li class="nav-item">
+            <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#{{item1.child.name}}-collapse">
+                <span class="{{item1.child.icon.value}} text-primary"></span>    {{item1.child.label}}
+            </button>
+            <div class="collapse show" id="{{item1.child.name}}-collapse">
+                <ul class="btn-toggle-nav" style="list-style-type: none;">
+            {% for item2 in item1.child.itemList %}
+                {% if item2.child.itemList %}
+                <li class="nav-item">
+                    <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#{{item2.child.name}}-collapse">
+                        <span class="{{item2.child.icon.value}} text-primary"></span>    {{item2.child.label}}
                     </button>
-                    <div class="collapse show" id="home-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a>
-                            </li>
+                    <div class="collapse show" id="{{item2.child.name}}-collapse">
+                        <ul class="btn-toggle-nav" style="list-style-type: none;">
+                    {% for item3 in item2.child.itemList %}
+                        {% if item3.child.itemList %}
+                        <li class="nav-item">
+                            <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#{{item3.child.name}}-collapse">
+                                <span class="{{item3.child.icon.value}} text-primary"></span>    {{item3.child.label}}
+                            </button>
+                            <div class="collapse show" id="{{item3.child.name}}-collapse">
+                                <ul class="btn-toggle-nav" style="list-style-type: none;">
+                            {% for item4 in item3.child.itemList %}
+                                {% if item4.child.itemList %}
+                                <li class="nav-item">
+                                    <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#{{item4.child.name}}-collapse">
+                                        <span class="{{item4.child.icon.value}} text-primary"></span>    {{item4.child.label}}
+                                    </button>
+                                    <div class="collapse show" id="{{item4.child.name}}-collapse">
+                                        <ul class="btn-toggle-nav" style="list-style-type: none;">
+                                    {% for item5 in item4.child.itemList %}
+                                        <li><a href="{{item5.url}}" class="link-body-emphasis text-decoration-none"><span class="{{item5.child.icon.value}} text-info"></span>   {{item5.child.label}}</a></li>
+                                    {% endfor %}
+                                {% else %}
+                                            <li><a href="{{item4.url}}" class="link-body-emphasis text-decoration-none"><span class="{{item4.child.icon.value}} text-info"></span>   {{item4.child.label}}</a></li>
+                                {% endif %}
+                                {% if item4.child.itemList %}
+                                        </ul>
+                                    </div>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                                    <li><a href="{{item3.url}}" class="link-body-emphasis text-decoration-none"><span class="{{item3.child.icon.value}} text-info"></span>   {{item3.child.label}}</a></li>
+                        {% endif %}
+                        {% if item3.child.itemList %}
+                                </ul>
+                            </div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                            <li><a href="{{item2.url}}" class="link-body-emphasis text-decoration-none"><span class="{{item2.child.icon.value}} text-info"></span>   {{item2.child.label}}</a></li>
+                {% endif %}
+                {% if item2.child.itemList %}
                         </ul>
                     </div>
                 </li>
-                <li class="mb-1"> <button
-                        class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-                        Dashboard
-                    </button>
-                    <div class="collapse" id="dashboard-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="mb-1"> <button
-                        class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-                        Orders
-                    </button>
-                    <div class="collapse" id="orders-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="border-top my-3"></li>
-                <li class="mb-1"> <button
-                        class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-                        data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-                        Account
-                    </button>
-                    <div class="collapse" id="account-collapse">
-                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">New...</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a>
-                            </li>
-                            <li><a href="#"
-                                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a>
-                            </li>
-                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign
-                                    out</a></li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+                <li><a href="{{item1.url}}" class="link-body-emphasis text-decoration-none"><span class="{{item1.child.icon.value}} text-info"></span>    {{item1.child.label}}</a></li>
+        {% endif %}
+        {% if item1.child.itemList %}
+                </ul>
+            </div>
+        </li>
+        {% endif %}
+    {% endfor %}
+
+    <li class="nav-item"> 
+                <button class="btn btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#web-collapse">
+                    <span class="fa-brands fa-youtube"></span> Test
+                    <span class="actions">
+                        <a href="/private"><i class="fa-solid fa-pencil text-success" title="Añadir menú item"></i></a>
+                        <i class="fa-solid fa-pen-to-square text-info" title="Modificar menú item" href="/private"></i>
+                        <i class="fa-solid fa-trash-can text-danger" title="Suprimir menú item"></i>
+                        <i class="fa-solid fa-magnifying-glass" title="Consultar menú item"></i>
+                    </span>
+                </button>
+                <div class="collapse show" id="web-collapse">
+                    <ul class="btn-toggle-nav">
+                        <li><a href="#"
+                                class="link-body-emphasis text-decoration-none"><span class="fa-solid fa-sitemap"></span>   Sitios Web</a>
+                        </li>
+                        <li><a href="#"
+                                class="link-body-emphasis text-decoration-none"><span class="fa-solid fa-section"></span>   Secciones</a>
+                        </li>
+                        <li><a href="{{URL}}"
+                                class="link-body-emphasis text-decoration-none"><span class="fa-solid fa-palette"></span>   Colores</a>
+                            <span class="actions">
+                                <a href="/private"><i class="fa-solid fa-plus text-success" title="Añadir menú item"></i></a>
+                                <a href="/"><i class="fa-solid fa-pen-to-square text-info" title="Modificar menú item"></i></a>
+                                <i class="fa-solid fa-trash-can text-danger" title="Suprimir menú item"></i>
+                                <i class="fa-solid fa-magnifying-glass" title="Consultar menú item"></i>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

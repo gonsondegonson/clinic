@@ -7,19 +7,13 @@ from mysite import functions
 def home(request):
     # Get list of parameters from URL request using project secret
     parmList = functions.parm_list(request, None)
+    # Get Site object using host received in URL
+    site = Site.objects.get(url = request.get_host())
+    # Get list of Sections for the Site
+    sections = getSections(site.company.id, parmList.get("idSection"))
 
-    # Get Site object using Company Id received
-    site = getSite(parmList.get("idCompany"), request.get_host())
-    if site.url == request.get_host():
-        # Get list of Sections for the Site
-        sections = getSections(site.company.id, parmList.get("idSection"))
-
-        #Get list of Contents for the Section
-
-        return render(request, 'public/home.html', 
-            {'Site': site, 'Sections': sections, })
-    #else:
-        #Error#
+    return render(request, 'public/home.html', 
+        {'site': site, 'sections': sections, 'session': request.session})
 
 def getSite(idCompany, host):
     # Get Site Object

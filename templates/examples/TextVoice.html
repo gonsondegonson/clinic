@@ -1,0 +1,21 @@
+<!-- https://lenguajejs.com/javascript/web-apis/speechsynthesis/ -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Texto a Voz</title>
+</head>
+<body>
+    <textarea id="texto" rows="4" cols="50" placeholder="Escribe aquí el texto que quieres escuchar"></textarea>
+    <button onclick="leerTexto()">Leer Texto</button>
+
+    <script>
+        function leerTexto() {
+            const texto = document.getElementById('texto').value;
+            const utterance = new SpeechSynthesisUtterance(texto);
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>

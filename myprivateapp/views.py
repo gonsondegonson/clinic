@@ -1,112 +1,130 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.shortcuts import render
 from django.conf import settings
 from django.utils import timezone
+from django.http import Http404
+from django.utils.html import format_html
+from django.template import Context, Template
+from django.template.loader import render_to_string
 
 from .models import *
-from mypublicapp.models import *
+from mypublicapp.models import Site
+
+from .forms import EditColor
+
+from .functions import *
 from mysite import functions
 
 @login_required
 def home(request):
     # Get session data
     appSession = getAppSession(request)
-    # Get list of parameters from URL request using session secret
-    parmList = functions.parm_list(request, appSession.secret)
-    # Get Site object using Company Id received
-    site = getSite(parmList.get("idCompany"), request.get_host())
-    if site.url == request.get_host():
-        # Get member using User Id received
-        member = Member.objects.get(user = request.user)
+    # Verify that the request come from same url and user than stored on session
+    if (request.user == appSession.member.user) and (request.get_host() == appSession.member.company.site.url):
         # Get menu option from parameter list
-        idOption = parmList.get("idOption")
-        # Get 
+        idOption = appSession.parmList.get("idOption")
+        # Get html page for selected Option
         match idOption:
             case "ListCompany":
                 option = "ListCompany#"
             case "ListMember":
                 option = "ListMember#"
             case "ListColor":
-                return getListColor(request, site, member, appSession, parmList)
+                return getListColor(request, appSession)
+            case "ListIcon":
+                return getListIcon(request, appSession)
+            case "ListLetter":
+                return getListLetter(request, appSession)
+            case "EditColor":
+                return getEditColor(request, appSession)
             case _:
-                return getUnknown(request, member, appSession, parmList)
-    #else:
-        #Error - redirect to#
-
-
-def getAppSession(request):
-    # Create or Update application session data
-    appSession, created = AppSession.objects.update_or_create(
-        session_id = request.session.session_key,
-        defaults={'modification': timezone.now}
-    )
-    
-    return appSession
-
-def getSite(idCompany, host):
-    # Get Site Object
-    if idCompany == None:
-        # Get Site object using host received in URL
-        site = Site.objects.get(url = host)
+                return getUnknown(request, appSession)
     else:
-        # Get Site object using Company Id received in URL
-        site = Site.objects.get(id = idCompany)
+        #Error - redirect to...#
+        return getUnknown(request, appSession)
 
-    return site
-
-def getEntityFields(entity, OrderBy, parmList, appSession):
-    # Get list of entity fields
-    entityFields = entity.appentityfield_set.all()
-    # Add order link to fields for headers
-    for field in entityFields:
-        if field.order != OrderType.NoOrder:
-            if field.name == OrderBy.replace('-',''):
-                # If current order field, switchs Asc <--> Dsc
-                url = 'idOption=' + field.entity.optionList + '|' + 'OrderBy=' + ('' if OrderBy.startswith('-') else '-') + field.name
-                # 
-                if OrderBy.startswith('-'):
-                    field.iconDown = ' '
-                else:
-                    field.iconUp = ' '
-            else:
-                # If not, assigns defined order
-                url = 'idOption=' + field.entity.optionList + '|' + 'OrderBy=' + ('-' if field.order == OrderType.Descending else '') + field.name
-
-            # Save Url encoded
-            field.url = functions.getUrlEncoded(parmList, url, appSession.secret)
-    
-    return entityFields
-
-def getListColor(request, site, member, appSession, parmList):
-    # Get Parameters
-    OrderBy = functions.getParameter(parmList, "OrderBy", "name")
-    RecordLimit = functions.getParameter(parmList, "RecordLimit", 100)
-    # Get Entity record
-    entity = AppEntity.objects.get(name = 'Color')
-
+def getListColor(request, appSession):
+    # Get Entity configuration
+    entity = getEntity('color', appSession)
     # Retrieve database records
-    colors = Color.objects.filter(company = site.company.id).order_by(OrderBy)[:int(RecordLimit)]
-    # Add detail link to retrieved records
+    colors = Color.objects.filter(company = appSession.member.company.id)
+    # Add 'detail' record link to retrieved records
+    editUrl = 'idOption=' + entity.opt.edit + '|' + 'idColor='
     for color in colors:
-        url = 'idOption=' + entity.optionRecord + '|' + 'idColor=' + str(color.id)
-        color.url = functions.getUrlEncoded(parmList, url, appSession.secret)
+        color.editUrl = functions.getUrlEncoded(editUrl + str(color.id), appSession.secret)
+        color.modal = render_to_string('private/edit/micolor.html', {'session': appSession, 'entity': entity, 'record': color, 'form': EditColor(instance=color)}, request=request)
 
-    entity.entityFields = getEntityFields(entity, OrderBy, parmList, appSession)
+    return render(request, 'private/list/color.html', {'session': appSession, 'entity': entity, 'records': colors, 'form': EditColor()})
 
-    return render(request, 'private/ListColor.html', {'site': site, 'member': member, 'entity': entity, 'colors': colors,})
+def getListIcon(request, appSession):
+    # Get Entity configuration
+    entity = getEntity('icon', appSession)
+    # Retrieve database records
+    icons = Icon.objects.filter(company = appSession.member.company.id)
+    # Add 'detail' record link to retrieved records
+    editUrl = 'idOption=' + entity.opt.edit + '|' + 'idIcon='
+    for icon in icons:
+        icon.editUrl = functions.getUrlEncoded(editUrl + str(icon.id), appSession.secret)
 
+    return render(request, 'private/list/icon.html', {'session': appSession, 'entity': entity, 'records': icons,})
 
-def getUnknown(request, member, appSession, parmList):
+def getListLetter(request, appSession):
+    # Get Entity configuration
+    entity = getEntity('letter', appSession)
+    # Retrieve database records
+    letters = Letter.objects.filter(company = appSession.member.company.id)
+    # Add 'detail' record link to retrieved records
+    editUrl = 'idOption=' + entity.opt.edit + '|' + 'idLetter='
+    for letter in letters:
+        letter.editUrl = functions.getUrlEncoded(editUrl + str(letter.id), appSession.secret)
 
-    #url = 'idCompany=' + str(parmList.get("idCompany")) + '|' + 'idOption=' + str(parmList.get("idOption"))
-    url = 'idCompany=' + '1' + '|' + 'idOption=' + 'ListColor'
-    url = '?key=' + functions.encrypt_msg(url, appSession.secret)
+    return render(request, 'private/list/letter.html', {'session': appSession, 'entity': entity, 'records': letters,})
+
+def getUnknown(request, appSession):
+    entity = getEntity('icon', appSession)
 
     return render(request, 'private/home.html', {
-        'STATIC_URL': appSession.secret,
-        'STATIC_ROOT': appSession.creation,
-        'STATICFILES_DIRS': appSession.modification,
-        'idOption': member,
-        'URL': url,
+        'request': request,
+        'session': appSession, 
+        'entity': entity,
     })
 
+def getEditColor(request, appSession):
+     # Get Entity configuration
+    entity = getEntity('color', appSession)
+    # Get record
+    idColor = appSession.parmList.get("idColor")
+    if idColor != None:
+        color = Color.objects.get(id = idColor)
+
+    if request.method == "POST":
+        if 'deletecolor' in request.POST:
+            # Delete existing record
+            #raise Http404("Delete Color: " + color.name)
+            color.delete()
+
+        if 'updatecolor' in request.POST:
+            #raise Http404("Update Color: " + color.name)
+            form = EditColor(request.POST)
+            if form.is_valid():
+                color = form.save(commit=False)
+                if idColor != None:
+                    # Change existing record
+                    color.id = idColor
+                    color.save(update_fields=['name','value'])
+                else:
+                    # Create new record
+                    color.company = appSession.member.company
+                    color.save()
+
+        return getListColor(request, appSession)
+    else:
+        if idColor != None:
+            # Edit existing record
+            form = EditColor(instance=color)
+        else:
+            # Add new record
+            form = EditColor()
+
+    return render(request, 'private/edit/color.html', {'session': appSession, 'entity': entity, 'form': form})

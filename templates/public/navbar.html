@@ -1,16 +1,16 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg fixed-top" style="background-color:#92c9eb;">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color: {{site.navbarColor.value}}">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="{% static 'images/ColegioDeMedicos.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
-         {{Site.company.name}}
+         {{site.company.name}}
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-    {% for section in Sections %}
+    {% for section in sections %}
         <li class="nav-item">
         {% if section.current == True %}
           <a class="nav-link" aria-current="true" >{{section.name}}</a>

@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block control %}
+    {% include '../control.html' %}
+{% endblock %}
+
+{% block tablelist %}
+    <td>{{ record.name }}</td>
+    <td style="font-family:'{{record.value}}'">  {{ record.value }} (abcdefghijk... ABCDEFGHIJK... 1234567890)</td>
+{% endblock %}

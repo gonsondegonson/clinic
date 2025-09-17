@@ -3,24 +3,20 @@
 
 {% block header %}
 <div class="container-fluid">
-{% include './header.html' %}
-</div>
-{% endblock %}
-
-{% block navbar %}
-<div class="container-fluid">
 {% include './navbar.html' %}
 </div>
 {% endblock %}
 
-{% block content %}
-<div class="container-fluid">
+{% block main %}
+<div id="main" class="container-fluid" style="margin-top:65px; margin-bottom:65px; margin-left:1px; margin-right:1px;">
     <div class="row content">
-        <div class="col-xl-2  sidenav">
+        <div class="col-xl-4  sidenav" style="border: 1px solid #240224;">
         </div>
-        <div class="col-xl-10 sidenav">
+        <div class="col-xl-4 sidenav" style="border: 1px solid #240224;">
             {% block detail %}
             {% endblock %}
+        </div>
+        <div class="col-xl-4  sidenav" style="border: 1px solid #240224;">
         </div>
     </div>
 </div>
@@ -28,6 +24,6 @@
 
 {% block footer %}
 <div class="container-fluid">
-{% include '../footer.html' %}
+{% include './footer.html' %}
 </div>
 {% endblock %}

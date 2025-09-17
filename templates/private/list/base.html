@@ -1,0 +1,97 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}Lista de {{ entity.label }}{% endblock %}
+
+{% block href %}
+    <link href="{% static 'bootstrap/table/dist/jquery.resizableColumns.min.css' %}" type="text/css" rel="stylesheet">
+	<link href="{% static 'bootstrap/table/dist/bootstrap-table.min.css' %}" type="text/css" rel="stylesheet">
+	<link href="{% static 'bootstrap/table/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block src %}
+	<script src="{% static 'bootstrap/table/dist/bootstrap-table.min.js' %}"></script>
+	<script src="{% static 'bootstrap/table/dist/bootstrap-table-locale-all.min.js' %}"></script>
+	<script src="{% static 'js/jquery.resizableColumns.min.js' %}"></script>
+	<script src="{% static 'bootstrap/table/dist/extensions/resizable/bootstrap-table-resizable.min.js' %}"></script>
+	<script src="{% static 'js/tableExport.min.js' %}"></script>
+	<script src="{% static 'bootstrap/table/dist/extensions/export/bootstrap-table-export.min.js' %}"></script>
+	<script src="{% static 'bootstrap/table/dist/extensions/sticky-header/bootstrap-table-sticky-header.min.js' %}"></script>
+{% endblock %}
+
+{% block detail %}
+<div id="toolbar">
+    {% if entity.auth.view == True %}
+    <a class="btn btn-outline-success" role="button" href="{{entity.url.list}}" data-toggle="tooltip" data-placement="top" title="Recargar {{ entity.label }}"><i class="fa-solid fa-arrows-rotate"></i></a>
+    {% endif %}
+    {% if entity.auth.add == True %}
+    <a class="btn btn-outline-primary" role="button" data-bs-toggle="modal" data-bs-target="#miModal" data-toggle="tooltip" data-placement="top" title="Añadir {{ entity.label }}"><i class="fas fa-plus"></i></a>
+    {% endif %}
+</div>
+<div class="table-responsive">
+    <table data-toggle="table" data-locale="es-ES" 
+        data-search="true"
+        data-toolbar="#toolbar"
+        data-show-toggle="true"
+        data-show-fullscreen="true"
+        data-show-columns="true"
+        data-show-columns-toggle-all="true"
+        data-detail-view="true"
+        data-detail-formatter="detailFormatter"
+        data-show-pagination-switch="true"
+        data-pagination="true"
+        data-page-list="[10, 25, 50, 100, all]"
+        data-resizable="true"
+        data-sticky-header="true"
+        data-sticky-header-offset-y="55"
+        {% if entity.auth.export == True %}data-show-export="true"{% endif %}
+    >
+        <thead class="table-secondary">
+            {% if entity.auth.view == True or entity.auth.change == True or entity.auth.delete == True %}
+            <th data-field="Option">Opt</th>
+            {% endif %}
+            {% for field in entity.fields %}
+            <th data-field="{{field.name}}" {% if field.order != "" %}data-sortable="true"{% endif %}>{{field.label}}</th>
+            {% endfor %}
+        </thead>
+        <tbody>
+            {% if entity.auth.view == True %}
+            {% for record in records %}
+            <tr>
+                {% if entity.auth.view == True or entity.auth.change == True or entity.auth.delete == True %}
+                <td class="text-nowrap" style="width:50px;">
+                    <a class="btn btn-outline-primary btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#miModal{{record.id}}" data-toggle="tooltip" data-placement="top" title="Editar {{ record }}"><span class="fas fa-edit"></span></a>
+                    {% block tableoption %}{% endblock %}
+                </td>
+                {% endif %}
+                {% block tablelist %}{% endblock %}
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>  
+    </table>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+	$(document).ready(function($) {
+        $(".table-row").click(function() {
+            window.document.location = $(this).data("href");
+        });
+    });
+
+	$(function() {
+		$("#table").bootstrapTable()
+	})
+
+	window.detailFormatter = (index, row) => {
+	const html = []
+
+	$.each(row, function (key, value) {
+		html.push(`<p><b>${key}:</b> ${value}</p>`)
+	})
+	return html.join('')
+	}
+</script>
+{% endblock %}
