@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'colorfield',
     'myapp.apps.MyAppConfig',
     'mypublicapp.apps.MyPublicAppConfig',
     'myprivateapp.apps.MyPrivateAppConfig',
@@ -112,7 +113,7 @@ TIME_ZONE = 'Europe/Berlin'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

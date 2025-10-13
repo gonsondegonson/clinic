@@ -1,0 +1,13 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block control %}
+    {% include '../control.html' %}
+{% endblock %}
+
+{% block tablelist %}
+    <td>{{ record.name }}</td>
+    <td>{{ record.label }}</td>
+    <td>{{ record.option }}</td>
+    <td><span class="{{record.icon.value}}"></span>  {{ record.icon }}</td>
+{% endblock %}

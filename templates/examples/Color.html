@@ -48,7 +48,7 @@
         <!-- To select the color -->
         Color Picker: <input type="color" id="colorPicker" value="#f0f0f0">
         <!-- To display hex code of the color -->
-        Hex Code: <input type="text" id="box">
+        Hex Code: <input type="color" id="box">
     </div>
   
     <script>
@@ -56,7 +56,7 @@
             // Get the value return by color picker
             var color = document.getElementById('colorPicker').value;
             // Set the color as background
-            document.body.style.backgroundColor = color;
+            //document.body.style.backgroundColor = color;
             // Take the hex code
             document.getElementById('box').value = color;
         }

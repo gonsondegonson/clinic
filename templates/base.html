@@ -30,13 +30,16 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: serif;
 }
 </style>
 
 </head>
 
-<body style="background-color:{% if session.member.company.site %}{{session.member.company.site.backgroundColor.value}}{% else %}{{site.backgroundColor.value}}{% endif %}">
+<body 
+{%if site.backgroundColor%} style="background-color:{{site.backgroundColor.value}}"{% else %}
+{%if session.member.company.site.backgroundColor%} style="background-color:{{session.member.company.site.backgroundColor.value}}"{% endif %}{% endif %}
+>
 
 	{% block header %}{% endblock %}
 	{% block main %}{% endblock %}

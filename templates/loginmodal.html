@@ -1,0 +1,93 @@
+<div class="modal fade" id="myLogin" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="myLoginForm" method="POST" action="{{site.urlLogin}}" class="post-form">{% csrf_token %}
+                <div class="modal-header">
+                    <h3 class="modal-title" id="myModalLabel">Area Privada</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    {{form.as_p}}
+                    {% if errors %}
+                    <div class="error">
+                        {% for error in errors %}
+                        <div id="error-messages" class="alert alert-danger d-flex align-items-center" role="alert">
+                            <div><span class="fa-solid fa-triangle-exclamation"></span>   {{ error }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="login" class="btn btn-outline-dark"><span class="fa-solid fa-thumbs-up"></span>    Iniciar Sesión</button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"><span class="fa-solid fa-thumbs-down"></span>    Cancelar</button>
+                </div>        
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ejemplo básico de cómo manejar la respuesta AJAX y mostrar errores
+    document.getElementById('myLoginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evitar el envío tradicional del formulario
+
+        const myData = new FormData(this);
+        console.log (myData);
+        fetch('{{site.urlLogin}}', {
+            method: 'POST',
+            headers: {'X-CSRFToken': myData.get('csrfmiddlewaretoken')},
+            body: myData,
+        })
+        .then(respuesta => { 
+            console.log (respuesta);
+            if (respuesta.ok) {
+                // Éxito, cierra el modal, actualiza la tabla, etc.
+                alert('¡Éxito!')
+            } 
+            else {
+                alert('Error: ' + respuesta.text)
+            // Manejamos la respuesta de la petición aqui
+            }
+        })
+        .catch(error => {
+            alert('¡Error!')
+            // Si hay un error en la petición, lo manejamos aqui 
+        })
+            });
+</script>
+
+        const formData = new FormData(this);
+        alert('Before fetch');
+        fetch('http://127.0.0.1:8000/private/', {
+            method: 'POST',
+            headers: {'X-CSRFToken': formData.get('csrfmiddlewaretoken')},
+            body: formData,
+        })
+        .then(data => {
+            alert('Data: ' + data.data);
+            if (data.success) {
+                // Éxito, cierra el modal, actualiza la tabla, etc.
+                alert('¡Éxito!')
+            } 
+            else {
+                alert('¡Errores!' + document.getElementById('errors-messages'))
+                // Mostrar errores
+                const errorsContainer = document.getElementById('errors-messages');
+                //errorsContainer.innerHTML = ''; // Limpiar errores previos
+                for (const field in data.errors) {
+                    alert('¡Un Error!')
+                    const fieldErrors = data.errors[field];
+                    fieldErrors.forEach(error => {
+                        const errorElement = document.createElement('div');
+                        errorElement.textContent = `${field}: ${error.message}`;
+                        errorsContainer.appendChild(errorElement);
+                    });
+                }
+                errorsContainer.style.display = 'block'; // Mostrar el contenedor de errores
+            }
+        })
+        .catch(error => {
+            alert('Error:' + error)
+            console.error('Error:', error);
+        });

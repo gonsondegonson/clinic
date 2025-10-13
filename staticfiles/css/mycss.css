@@ -1,0 +1,49 @@
+h1 a, h2 a {
+     color: #C25100;
+}
+
+.myHeader {
+     margin-top:25px; 
+     margin-bottom:25px; 
+     margin-left:25px; 
+     margin-right:25px; 
+     border: 1px solid #240224; 
+}
+
+.myMain {
+     margin-top:25px; 
+     margin-bottom:25px; 
+     margin-left:25px; 
+     margin-right:25px; 
+     border: 1px solid #240224; 
+}
+
+.myMenu {
+     margin-top:25px; 
+     margin-bottom:25px; 
+     margin-left:25px; 
+     margin-right:25px; 
+     border: 1px solid #240224; 
+}
+
+.myDetail {
+     margin-top:25px; 
+     margin-bottom:25px; 
+     margin-left:25px; 
+     margin-right:25px; 
+     border: 1px solid #240224; 
+}
+
+.myFooter {
+     margin-top:25px; 
+     margin-bottom:25px; 
+     margin-left:25px; 
+     margin-right:25px; 
+     border: 1px solid #240224; 
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}

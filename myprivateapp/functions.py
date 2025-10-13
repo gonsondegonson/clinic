@@ -1,7 +1,7 @@
+from myapp.models import *
 from .models import *
-from mypublicapp.models import Site
 
-from mysite import functions
+from myapp import functions
 
 def getAppSession(request):
     # Create or Update application session data
@@ -15,8 +15,10 @@ def getAppSession(request):
             'secret':  functions.get_secret(),
         }
     )
+    # Initialize Error list
+    appSession.errors = []
     # Get request URL
-    appSession.requestUrl = '?' + str(request.GET.urlencode())
+    #appSession.requestUrl = '?' + str(request.GET.urlencode())
     # Get list of parameters from URL request using session secret
     appSession.parmList = functions.getParmList(request, appSession.secret)
     # Get menu list
@@ -26,35 +28,32 @@ def getAppSession(request):
 
     return appSession
 
-def getEntity(entityName, appSession):
-    # Get Entity record
+def getEntity(entityName, appSession, isModal=False):
+    # Get Entity record 
     entity = AppEntity.objects.get(name = entityName)
     # Get Entity fields
     entity.fields = entity.appentityfield_set.all()
     # Get Entity options
     entity.options = entity.appentityoption_set.all()
     entity.opt = type('opt', (), {
-        'list': str(next((option for option in entity.options if option.type == OptionType.View), None)), 
-        'edit': str(next((option for option in entity.options if option.type == OptionType.Add), None)),
+        'list': 'idOption=' + str(next((option.option for option in entity.options if option.type == OptionType.View), None)), 
+        'edit': 'idOption=' + str(next((option.option for option in entity.options if option.type == OptionType.Add), None)),
     })
     # Get Entity authorisations
     entity.auth = type('auth', (), {
-        'view': entity.hasPerm(appSession.member.user, OptionType.View), 
-        'add': entity.hasPerm(appSession.member.user, OptionType.Add),
+          'view': entity.hasPerm(appSession.member.user, OptionType.View), 
+           'add': entity.hasPerm(appSession.member.user, OptionType.Add),
         'change': entity.hasPerm(appSession.member.user, OptionType.Change),
         'delete': entity.hasPerm(appSession.member.user, OptionType.Delete),
         'export': entity.hasPerm(appSession.member.user, OptionType.Export),
     })
-    # Get URLs
+    # Get Entity URLs
     entity.url = type('url', (), {
-        'list': functions.getUrlEncoded(('idOption=' + entity.opt.list), appSession.secret), 
-        'edit': functions.getUrlEncoded(('idOption=' + entity.opt.edit), appSession.secret),
+        'list': functions.getUrlEncoded(entity.opt.list, appSession.secret) if entity.auth.view else None, 
+        'edit': functions.getUrlEncoded(entity.opt.edit, appSession.secret) if entity.auth.add else None,
     })
-    #entity.listOption = str(next((option for option in entity.options if option.type == OptionType.View), None))
-    #entity.listUrl = functions.getUrlEncoded(('idOption=' + entity.opt.list), appSession.secret)
-
-    #entity.editOption = str(next((option for option in entity.options if option.type == OptionType.Add), None))
-    #entity.editUrl = functions.getUrlEncoded(('idOption=' + entity.opt.edit), appSession.secret)
+    # Get Modal Flag
+    entity.isModal = True if isModal else False
 
     return entity
 
@@ -71,7 +70,7 @@ def getMenuList(appSession):
 
 def getMenuTree(appSession, appMenuItem):
 
-    appMenuItem.itemList = AppMenuTree.objects.filter(parent = appMenuItem.id)
+    appMenuItem.itemList = AppMenuTree.objects.filter(parent = appMenuItem.id).order_by('order')
 
     for menuItem in appMenuItem.itemList:
         if menuItem.child.option != None:
@@ -80,3 +79,28 @@ def getMenuTree(appSession, appMenuItem):
         # Get the next menu level
         getMenuTree(appSession, menuItem.child)
 
+def getRecord(AppSession, AppEntity, keyFields):
+
+    try:
+        match AppEntity.name:
+            case "color":
+                AppEntity.record = Color.objects.get(id = keyFields[0]) if keyFields[0] != None else None
+            case "icon":
+                AppEntity.record = Icon.objects.get(id = keyFields[0]) if keyFields[0] != None else None
+            case "letter":
+                AppEntity.record = Letter.objects.get(id = keyFields[0]) if keyFields[0] != None else None
+            case "menuItem":
+                AppEntity.record = AppMenuItem.objects.get(id = keyFields[0]) if keyFields[0] != None else None
+            case "menuTree":
+                AppEntity.record = AppMenuTree.objects.get(id = keyFields[0]) if keyFields[0] != None else None
+            case _:
+                pass
+
+    except Exception as Ex:
+        AppSession.errors.append('¡El registro ya no existe!')
+        return False
+
+    if AppEntity.record is not None:
+        AppEntity.getUrl(AppSession.secret)
+
+    return True

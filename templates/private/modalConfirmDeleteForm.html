@@ -1,0 +1,19 @@
+<div class="modal fade" id="myModalConfirm" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content" style="background-color: {{session.member.company.site.backgroundColor.value}}">
+            <form method="POST" action="{{entity.record.url.edit}}" class="post-form">{% csrf_token %}
+                <div class="modal-header">
+                    <h3 class="modal-title" id="myModalLabel">Confirmar borrado de {{entity.label}}</h3>
+                </div>
+                <div class="modal-body">
+                    <h5>¿Confirma que desea borrar <b>{{entity.record}}</b>?</h5>
+                    <p>Esta operación no se puede deshacer</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="delete{{entity.name}}" class="btn btn-outline-dark"><span class="fa-solid fa-thumbs-up"></span>   Confirmar</button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal"><span class="fa-solid fa-thumbs-down"></span>    Cancelar</button>
+                </div>        
+            </form>
+        </div>
+    </div>
+</div>

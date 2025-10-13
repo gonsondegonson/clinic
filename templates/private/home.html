@@ -8,7 +8,8 @@
     <p>It works!</p>
     <p>This is My PRIVATE Home!</p>
     <h1>Mi Árbol de Datos</h1>
-    <p>Menú: {{session.member.company.site.menu.id}} </p>
+    <p>User: {{user}} </p>
+    <p>Pass: {{pass}} </p>
     {% for item1 in session.member.company.site.menu.itemList %}
         {% if item1.child.itemList %}
             <p>MENU: Parent: {{item1.parent.label}}   Child: {{item1.child.label}}  Perm: {{item1.hasPerm}}  URL: {{item1.url}}</p>

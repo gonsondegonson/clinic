@@ -1,14 +1,20 @@
 <!-- Custom Navbar for this template -->
 {% load static %}
-<nav class="navbar navbar-expand-lg fixed-top" style="background-color:{{session.member.company.site.navbarColor.value}}">
+<nav class="navbar navbar-expand-lg fixed-top" style="background-color:{{site.navbarColor.value}}{{session.member.company.site.navbarColor.value}}">
 	<div class="container-fluid">
-		<button class="btn btn-outline-dark btn-sm" type="button" data-toggle="tooltip" data-placement="right" title="Menú de {{session.member.name}}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-			<span class="fa-solid fa-bars"></span>
-		</button>
-		<a class="navbar-brand" href="#" style="color:black;" title="{{session.member.company.name}}">
-			<img style="max-width:40px; margin-left: 20px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
-				{{session.member.company.name}}   {{session.member}}
-		</a>
+		<ul class="navbar-nav mr-auto">
+			{% if session.member.company.site.menu %}
+			<button class="btn btn-outline-dark" type="button" data-toggle="tooltip" data-placement="right" title="Menú de {{session.member.name}}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+				<span class="fa-solid fa-bars"></span>
+			</button>
+			{%endif%}
+			<a class="navbar-brand" href="/" title="{{session.member.company.name}}">
+				<img style="max-width:40px; margin-left: 20px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
+				{{site.company.name}}{{session.member.company.name}}
+			</a>
+		</ul>
+		<ul class="navbar-nav mx-auto">
+		{% if session.menuList %}
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -27,5 +33,13 @@
 				</li>
 			</ul>
 		</div>
+		</ul>
+		<ul class="navbar-nav ml-auto">
+			<a class="navbar-brand" href="/" title="{{session.member.company.name}}">
+				{{session.member.user.first_name}} {{session.member.user.last_name}}
+				<img style="max-width:40px; margin-left: 20px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
+			</a>
+		</ul>
+		{%endif%}
 	</div>
 </nav>

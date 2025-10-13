@@ -1,0 +1,34 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block control %}
+    <h4>{% for object in entity.pathObjects %}
+    <a class="link-body-emphasis text-decoration-none" href="{{object.url}}" data-toggle="tooltip" data-placement="top" title="Volver a {{object.label}}">{{object.label}} > </a>
+    {% endfor %}</h4>
+{% endblock %}
+
+{% block toolbar %}
+    <a class="btn btn-outline-primary" role="button" data-bs-toggle="modal" data-bs-target="#myModalSelectmenuItem" data-toggle="tooltip" data-placement="top" title="Añadir {{ entity.label }}"><i class="fas fa-plus"></i></a>
+{% endblock %}
+
+{% block tableoption %}
+    <a class="btn btn-outline-primary btn-sm {% if record.url.delete == None %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#myModalDelete{{ record.id }}" data-toggle="tooltip" data-placement="top" title="Eliminar Submenú {{record.child.label}}"><i class="fa-solid fa-trash-can"></i></a>
+    <a class="btn btn-outline-primary btn-sm {% if record.child.option != None %}disabled{% endif %}" role="button" href="{{record.url.list}}" data-toggle="tooltip" data-placement="top" title="Listar Submenú {{record.child.label}}"><i class="fa-solid fa-folder-tree"></i></a>
+    <a class="btn btn-outline-primary btn-sm {% if record.url.up == None %}disabled{% endif %}" role="button" href="{{record.url.up}}" data-toggle="tooltip" data-placement="top" title="Subir {{record.child.label}}"><i class="fa-solid fa-arrow-up"></i></a>
+    <a class="btn btn-outline-primary btn-sm {% if record.url.down == None %}disabled{% endif %}" role="button" href="{{record.url.down}}" data-toggle="tooltip" data-placement="top" title="Bajar {{record.child.label}}"><i class="fa-solid fa-arrow-down"></i></a>
+{% endblock %}
+
+{% block tablelist %}
+    <td>{{ record.parent.label }}</td>
+    <td>{{ record.child.label }}{% if record.child.option != None %}  ({{ record.child.option}}){% endif %}</td>
+    <td>{{ record.order }}</td>
+    {% if record.url.delete != None %}
+        {% include '../modalConfirmDeleteList.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block modal %}
+    {% for entity in entity.select %}
+    {% include '../modalSelect.html' %}
+    {% endfor %}
+{% endblock %}

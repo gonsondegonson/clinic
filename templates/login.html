@@ -1,0 +1,24 @@
+<form method="POST" action="{{site.urlLogin}}" class="post-form">{% csrf_token %}
+    <div class="header">
+        <h3 class="title" id="myLabel">Area Privada</h3>
+    </div>
+    <div class="body">
+        <hr>
+        {{form.as_p}}
+        <hr>
+    </div>
+    {% if errors %}
+    <div class="error">
+        {% for error in errors %}
+        <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <div><span class="fa-solid fa-triangle-exclamation"></span>   {{ error }}</div>
+        </div>
+        {% endfor %}
+        <hr>
+    </div>
+    {% endif %}
+    <div class="footer">
+        <button type="submit" name="login" class="btn btn-outline-dark"><span class="fa-solid fa-thumbs-up"></span>    Iniciar Sesión</button>
+        <button type="submit" name="cancel" class="btn btn-outline-dark"><span class="fa-solid fa-thumbs-down"></span>    Cancelar</button>
+    </div>        
+</form>

@@ -1,7 +1,7 @@
 {% extends './base.html' %}
 
 {% block title %}
-    {% for section in sections %}
+    {% for section in site.sections %}
         {% if section.current == True %}
             {{site.company.name}} - {{section.description}}
         {% endif %}
@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block detail %}
-    {% for section in sections %}
+
+    <p>Company: {{session}}</p>
+    {% for section in site.sections %}
         <p>Section {{section.id}}: {{section.name}} Current: {{section.current}}</p>
         <p>{{section.url}}</p>
     {% endfor %}

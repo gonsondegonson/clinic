@@ -8,7 +8,30 @@
 {% endblock %}
 
 {% block main %}
-<div id="main" class="container-fluid" style="margin-top:65px; margin-bottom:65px; margin-left:1px; margin-right:1px;">
+<div id="main" class="container-fluid" style="margin-top:83px; margin-bottom:65px; margin-left:1px; margin-right:1px;">
+    <div class="row content align-self-center"  style="background-color:{{site.navbarColor.value}}">
+        <div class="col-xl-1 sidenav">
+        </div>
+        <div class="col-xl-10 sidenav">
+            <div class="row content align-self-center">
+                {% for section in site.sections %}
+                <div class="col-xl-2 sidenav">
+                    <ul style="list-style-type: none;">
+                        <li class="nav-item">
+                            {% if section.current == True %}
+                            <h4><a class="nav-link" aria-current="true" data-toggle="tooltip" data-bs-placement="bottom" title="{{ section.description }}"><b>   {{section.name}}</b></a></h4>
+                            {% else %}
+                            <h5><a class="nav-link" href="{{section.url}}" data-toggle="tooltip" data-bs-placement="bottom" title="{{ section.description }}">   {{section.name}}</a></h5>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-xl-1 sidenav">
+        </div>
+    </div>
     <div class="row content">
         <div class="col-xl-4  sidenav" style="border: 1px solid #240224;">
         </div>

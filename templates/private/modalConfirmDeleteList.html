@@ -1,0 +1,17 @@
+<div class="modal fade" id="myModalDelete{{ record.id }}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content" style="background-color: {{session.member.company.site.backgroundColor.value}}">
+            <div class="modal-header">
+                <h3 class="modal-title" id="myModalLabel">Confirmar borrado de {{entity.label}}</h3>
+            </div>
+            <div class="modal-body">
+                <h5>¿Confirma que desea borrar <b>{{record}}</b>?</h5>
+                <p>Esta operación no se puede deshacer</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-outline-dark" role="button" href="{{record.url.delete}}"><i class="fas fa-thumbs-up"></i>   Confirmar</a>
+                <a class="btn btn-outline-dark" role="button" data-bs-dismiss="modal""><i class="fas fa-thumbs-down"></i>    Cancelar</a>
+            </div>        
+        </div>
+    </div>
+</div>

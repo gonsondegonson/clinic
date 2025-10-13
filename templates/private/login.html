@@ -1,0 +1,31 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block header %}
+<div id="header" class="container-fluid">
+{% include './navbar.html' %}
+</div>
+{% endblock %}
+
+{% block main %}
+<div id="main" class="container-fluid" style="margin-top:70px; margin-bottom:70px; margin-left:70px; margin-right:3px;">
+    <div class="row content">
+<!--        <div class="col-xl-11 sidenav" style="border: 1px solid #240224;"> -->
+        <div class="col-xl-3 sidenav">
+        </div>
+        <div class="col-xl-3 sidenav">
+            <div id="detail">
+            {% block detail %}
+                {% include '../login.html' %}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div id="footer" class="container-fluid">
+{% include './footer.html' %}
+</div>
+{% endblock %}

@@ -21,12 +21,18 @@
 
 {% block detail %}
 <div id="toolbar">
-    {% if entity.auth.view == True %}
+    {% if entity.url.list != None %}
     <a class="btn btn-outline-success" role="button" href="{{entity.url.list}}" data-toggle="tooltip" data-placement="top" title="Recargar {{ entity.label }}"><i class="fa-solid fa-arrows-rotate"></i></a>
     {% endif %}
-    {% if entity.auth.add == True %}
-    <a class="btn btn-outline-primary" role="button" data-bs-toggle="modal" data-bs-target="#miModal" data-toggle="tooltip" data-placement="top" title="Añadir {{ entity.label }}"><i class="fas fa-plus"></i></a>
+    {% if entity.url.edit != None %}
+        {% if entity.isModal == True %}
+    <a class="btn btn-outline-primary" role="button" data-bs-toggle="modal" data-bs-target="#myModal" data-toggle="tooltip" data-placement="top" title="Añadir {{ entity.label }}"><i class="fas fa-plus"></i></a>
+    {% include '../edit/basemodal.html' %}
+        {% else %}
+    <a class="btn btn-outline-primary" role="button" href="{{entity.url.edit}}" data-toggle="tooltip" data-placement="top" title="Añadir {{ entity.label }}"><i class="fas fa-plus"></i></a>
+        {% endif %}
     {% endif %}
+    {% block toolbar %}{% endblock %}
 </div>
 <div class="table-responsive">
     <table data-toggle="table" data-locale="es-ES" 
@@ -40,30 +46,34 @@
         data-detail-formatter="detailFormatter"
         data-show-pagination-switch="true"
         data-pagination="true"
-        data-page-list="[10, 25, 50, 100, all]"
+        data-page-size="25"
+        data-page-list="[25, 50, 100, 200, all]"
         data-resizable="true"
         data-sticky-header="true"
         data-sticky-header-offset-y="55"
         {% if entity.auth.export == True %}data-show-export="true"{% endif %}
     >
         <thead class="table-secondary">
-            {% if entity.auth.view == True or entity.auth.change == True or entity.auth.delete == True %}
             <th data-field="Option">Opt</th>
-            {% endif %}
             {% for field in entity.fields %}
-            <th data-field="{{field.name}}" {% if field.order != "" %}data-sortable="true"{% endif %}>{{field.label}}</th>
+            <th data-field="{{field.name}}" {% if field.order %}data-sortable="true"{% endif %}>{{field.label}}</th>
             {% endfor %}
         </thead>
         <tbody>
             {% if entity.auth.view == True %}
-            {% for record in records %}
+            {% for record in entity.records %}
             <tr>
-                {% if entity.auth.view == True or entity.auth.change == True or entity.auth.delete == True %}
                 <td class="text-nowrap" style="width:50px;">
-                    <a class="btn btn-outline-primary btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#miModal{{record.id}}" data-toggle="tooltip" data-placement="top" title="Editar {{ record }}"><span class="fas fa-edit"></span></a>
-                    {% block tableoption %}{% endblock %}
-                </td>
+                {% if record.url.edit != None %}
+                    {% if entity.isModal == True %}
+                    <a class="btn btn-outline-primary btn-sm" role="button" data-bs-toggle="modal" data-bs-target="#myModal{{record.id}}" data-toggle="tooltip" data-placement="top" title="Editar {{ record }}"><span class="fas fa-edit"></span></a>
+                    {% include '../edit/basemodal.html' %}
+                    {% else %}
+                    <a class="btn btn-outline-primary btn-sm" role="button" href="{{record.url.edit}}" data-toggle="tooltip" data-placement="top" title="Editar {{record}}"><i class="fas fa-edit"></i></a>
+                    {% endif %}
                 {% endif %}
+                {% block tableoption %}{% endblock %}
+                </td>
                 {% block tablelist %}{% endblock %}
             </tr>
             {% endfor %}
