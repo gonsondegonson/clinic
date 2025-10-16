@@ -4,7 +4,7 @@ from colorfield.forms import ColorField, ColorWidget
 from .models import Color, Letter, Icon, AppMenuItem, AppEntityOption
 
 class EditColor(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=25)
     value = ColorField(widget=ColorWidget(), required=True)
     modification = forms.DateTimeField(widget=forms.HiddenInput(), required=False,)
 
@@ -13,8 +13,8 @@ class EditColor(forms.ModelForm):
         fields = ('name', 'value', 'modification')
 
 class EditLetter(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
-    value = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=25)
+    value = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=25)
     modification = forms.DateTimeField(widget=forms.HiddenInput(), required=False,)
 
     class Meta:
@@ -22,8 +22,8 @@ class EditLetter(forms.ModelForm):
         fields = ('name', 'value', 'modification')
 
 class EditIcon(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
-    value = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=25)
+    value = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=25)
     modification = forms.DateTimeField(widget=forms.HiddenInput(), required=False,)
 
     class Meta:
@@ -31,8 +31,8 @@ class EditIcon(forms.ModelForm):
         fields = ('name', 'value', 'modification')
 
 class EditMenuItem(forms.ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
-    label = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True)
+    name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=30)
+    label = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}), required=True, max_length=60)
     icon = forms.ModelChoiceField(
         queryset=Icon.objects.all().order_by('name'), 
         widget=forms.widgets.Select(attrs={'class':'form-select'}),

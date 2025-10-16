@@ -9,11 +9,12 @@
 		</button>
 		<div class="collapse navbar-collapse" id="myFooter">
 			<ul class="navbar-nav mr-auto">
-			{% for social in site.social %}
+			{% for social in session.member.company.site.social %}
 				<li class="nav-item"><a class="nav-link" href="{{social.link}}" data-toggle="tooltip" data-bs-placement="top" title="{{social.tooltip}}" target="_blank"><span class="{{social.icon.value}}"></span></a></li>
 			{% endfor %}
 			</ul>
 			<ul class="navbar-nav mx-auto">
+				<li><a>{{session.member.company.site.social}} Actualizado el {{session.modification}}:{{session.modification|date:"s"}}</a></li>
 			</ul>
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item"><a class="nav-link" href="mailto:gonson@hotmail.com"  data-toggle="tooltip" data-bs-placement="top" title="Contacta con el diseñador"  target="_blank"><span class="fa-solid fa-copyright"></span>  Designed by Gonson</a></li>

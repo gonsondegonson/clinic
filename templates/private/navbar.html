@@ -25,7 +25,7 @@
 						<span class="fa-solid fa-heart"></span>
 						Favoritos
 					</button>
-					<ul class="dropdown-menu" style="background-color:{{session.member.company.site.backgroundColor.value}}">
+					<ul class="dropdown-menu" style="background-color:{{session.member.company.site.windowColor.value}}">
 						{% for item in session.menuList %}{% if item.hasPerm == True %}
 						<li><a class="dropdown-item" href="{{item.url}}"><span class="{{item.icon.value}}"></span>	{{ item.label }}</a></li>
 						{% endif %}{% endfor %}
@@ -35,7 +35,7 @@
 		</div>
 		</ul>
 		<ul class="navbar-nav ml-auto">
-			<a class="navbar-brand" href="/" title="{{session.member.company.name}}">
+			<a class="navbar-brand" href="/private/" title="Página principal de {{session.member.user.first_name}} {{session.member.user.last_name}}">
 				{{session.member.user.first_name}} {{session.member.user.last_name}}
 				<img style="max-width:40px; margin-left: 20px;" src="{% static 'images/ColegioDeMedicos.png' %}" alt="Escudo">
 			</a>

@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block tableoption %}
-    <a class="btn btn-outline-primary btn-sm {% if record.url.delete == None %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#myModalDelete{{ record.id }}" data-toggle="tooltip" data-placement="top" title="Eliminar Submenú {{record.child.label}}"><i class="fa-solid fa-trash-can"></i></a>
+    <a class="btn btn-outline-primary btn-sm {% if record.url.delete == None %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#myModalConfirmDelete{{ record.id }}" data-toggle="tooltip" data-placement="top" title="Eliminar Submenú {{record.child.label}}"><i class="fa-solid fa-trash-can"></i></a>
     <a class="btn btn-outline-primary btn-sm {% if record.child.option != None %}disabled{% endif %}" role="button" href="{{record.url.list}}" data-toggle="tooltip" data-placement="top" title="Listar Submenú {{record.child.label}}"><i class="fa-solid fa-folder-tree"></i></a>
     <a class="btn btn-outline-primary btn-sm {% if record.url.up == None %}disabled{% endif %}" role="button" href="{{record.url.up}}" data-toggle="tooltip" data-placement="top" title="Subir {{record.child.label}}"><i class="fa-solid fa-arrow-up"></i></a>
     <a class="btn btn-outline-primary btn-sm {% if record.url.down == None %}disabled{% endif %}" role="button" href="{{record.url.down}}" data-toggle="tooltip" data-placement="top" title="Bajar {{record.child.label}}"><i class="fa-solid fa-arrow-down"></i></a>

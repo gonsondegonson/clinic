@@ -1,9 +1,9 @@
-<div class="modal fade" id="myModal{{record.id}}" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <form method="POST" action="{%if record %}{{record.url.edit}}{% else %}{{entity.url.edit}}{% endif %}" class="post-form">{% csrf_token %}
+<div class="modal fade" id="myModal{{record.id}}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background-color: {{session.member.company.site.backgroundColor.value}}">
+            <form id="myForm{{record.id}}" method="POST" action="{%if record %}{{record.url.edit}}{% else %}{{entity.url.edit}}{% endif %}" class="post-form">{% csrf_token %}
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">{%if record %}Editar {{record}}{% else %}Añadir {{entity}}{% endif %}</h4>
+                    <h4 class="modal-title">{%if record %}Editar {{record}}{% else %}Añadir {{entity}}{% endif %}</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -16,19 +16,22 @@
                 <div class="modal-footer">
                     {%if record %}
                         {% if entity.auth.delete == True %}
-                    <button type="submit" name="delete{{entity.name}}" class="btn btn-outline-dark"><span class="fa-solid fa-trash-can"></span>   Borrar</button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#myModalConfirmDelete{{record.id}}"><span class="fa-solid fa-trash-can"></span>   Borrar</button>
                         {% endif %}
                         {% if entity.auth.change == True %}
-                    <button type="submit" name="update{{entity.name}}" class="btn btn-outline-dark"><span class="fa-solid fa-floppy-disk"></span>    Guardar</button>
+                    <button type="submit" class="btn btn-outline-dark" name="update{{entity.name}}"><span class="fa-solid fa-floppy-disk"></span>    Guardar</button>
                         {% endif %}
                     {% else %}
                         {% if entity.auth.add == True %}
-                    <button type="submit" name="update{{entity.name}}" class="btn btn-outline-dark"><span class="fa-solid fa-floppy-disk"></span>    Guardar</button>
+                    <button type="submit" class="btn btn-outline-dark" name="update{{entity.name}}"><span class="fa-solid fa-floppy-disk"></span>    Guardar</button>
                         {% endif %}
                     {% endif %}
                     <button type="button" class="btn btn-outline-dark" class="btn-close" data-bs-dismiss="modal"><span class="fa-solid fa-rectangle-xmark"></span>    Salir</button>
                 </div>        
-            </form>
+          </form>
         </div>
     </div>
 </div>
+{%if record and entity.auth.delete == True %}
+    {% include '../modalConfirmDeleteForm.html' %}
+{% endif %}

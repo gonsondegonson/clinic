@@ -8,8 +8,8 @@ class SiteAdmin(admin.ModelAdmin):
 admin.site.register(Site, SiteAdmin)
 
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ["site", "order", "name", "description", "status"]
-    fields = ["site", "order", "name", "description", "status"]
+    list_display = ["order", "name", "description", "status"]
+    fields = ["order", "name", "description", "status"]
 admin.site.register(Section, SectionAdmin)
 
 class SocialAdmin(admin.ModelAdmin):

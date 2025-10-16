@@ -97,7 +97,7 @@ def getRecord(AppSession, AppEntity, keyFields):
                 pass
 
     except Exception as Ex:
-        AppSession.errors.append('¡El registro ya no existe!')
+        AppSession.errors.append('¡El registro ya no existe en ' + AppEntity.label + '! (pudo ser eliminado por otro usuario)')
         return False
 
     if AppEntity.record is not None:

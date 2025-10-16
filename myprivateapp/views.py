@@ -26,7 +26,6 @@ def home(request):
         # Verify that the request come from same url and user than stored on session
         if (request.user == appSession.member.user) and (request.get_host() == appSession.member.company.site.url):
             # Get menu option from parameter list
-            #idOption = '' if appSession.parmList.get("idOption") == None else appSession.parmList.get("idOption")
             idOption = functions.getParmValue(appSession.parmList, "idOption", "")
             # Get html page for selected Option
             match idOption.upper():
@@ -51,6 +50,7 @@ def home(request):
                 case "EDITMENUTREE":
                     return getEditMenuTree(request, appSession)
                 case _:
+                    # Redirect to home page
                     return getUnknown(request, appSession)
         else:
             #Error - redirect to...#
@@ -68,7 +68,7 @@ def getListColor(request, appSession):
 
 def getListIcon(request, appSession):
     # Get Entity configuration
-    entity = getEntity('icon', appSession, False)
+    entity = getEntity('icon', appSession)
     # Retrieve database records
     entity.records = Icon.objects.filter(company = appSession.member.company.id).order_by('name')
     entity.getUrls(appSession.secret)
@@ -77,16 +77,16 @@ def getListIcon(request, appSession):
 
 def getListLetter(request, appSession):
     # Get Entity configuration
-    entity = getEntity('letter', appSession, True)
+    entity = getEntity('letter', appSession)
     # Retrieve database records
     entity.records = Letter.objects.filter(company = appSession.member.company.id).order_by('name')
-    entity.getUrls(appSession.secret, EditLetter)
+    entity.getUrls(appSession.secret)
 
     return render(request, 'private/list/letter.html', {'session': appSession, 'entity': entity, 'records': entity.records,})
 
 def getListMenuItem(request, appSession):
     # Get Entity configuration
-    entity = getEntity('menuItem', appSession, False)
+    entity = getEntity('menuItem', appSession)
     # Retrieve database records
     entity.records = AppMenuItem.objects.filter(company = appSession.member.company.id).order_by('name')
     entity.getUrls(appSession.secret)
@@ -119,6 +119,7 @@ def getListMenuTree(request, appSession):
     # Retrieve child records
     entity.records = AppMenuTree.objects.filter(parent = idParent).order_by('order')
     entity.getTreeUrls(pathList, appSession.secret)
+    entity.getUpDownUrls(pathList, appSession.secret)
     for record in entity.records:
         # Disable standard 'edit record' URL
         record.url.edit = None
@@ -126,14 +127,11 @@ def getListMenuTree(request, appSession):
     # Retrieve select records for insert
     entity.select = []
     entity.select.append(getEntity('menuItem', appSession, False))
-    entity.select.append(getEntity('color', appSession, False))
 
     entity.select[0].records = AppMenuItem.objects.filter(company = appSession.member.company.id).exclude(id__in = list(map(int, entity.selList.split(',')))).order_by('label')
     for record in entity.select[0].records:
         # Insert record URL
         record.url = getUrlEncoded((entity.opt.edit + '|idOperation=Insert|idParent=' + idParent + '|idChild=' + str(record.id) + '|pathList=' + pathList), appSession.secret)
-
-    entity.select[1].records = Color.objects.filter(company = appSession.member.company.id)
 
     return render(request, 'private/list/menuTree.html', {'session': appSession, 'entity': entity, 'records': entity.records,})
 
@@ -148,7 +146,7 @@ def getUnknown(request, appSession):
 
 def getEditMenuItem(request, appSession):
      # Get Entity configuration
-    entity = getEntity('menuItem', appSession, False)
+    entity = getEntity('menuItem', appSession)
     # Get record
     idMenu = appSession.parmList.get("idMenu")
     if not getRecord(appSession, entity, [idMenu]):
@@ -159,10 +157,10 @@ def getEditMenuItem(request, appSession):
             # Update record
             try:
                 form = EditMenuItem(request.POST)
-                if 'deletemenu' in request.POST:
+                if 'deletemenuItem' in request.POST:
                     # Delete existing record
                     entity.record.delete()
-                if 'updatemenu' in request.POST:
+                if 'updatemenuItem' in request.POST:
                     if form.is_valid():
                         if entity.record != None:
                             if 1 != 1:
@@ -183,30 +181,26 @@ def getEditMenuItem(request, appSession):
                             entity.record.save()
                     else:
                         # Errors in Form
-                        raise Exception('Errores en el formulario')
-                # Go back to data list
-                return getListMenuItem(request, appSession)
+                        appSession.errors.append('¡Errores en el formulario!')
             except Exception as Ex:
                 # Error updating record
-                #del entity.record
                 appSession.errors.append(functions.getException(Ex))
-        #else:
-        # Send data to form, if exists
-        form = EditMenuItem() if entity.record == None else EditMenuItem(instance=entity.record)
-
-    return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
+            # Go back to data list
+            return getListMenuItem(request, appSession)
+        else:
+            # Send data to form, if exists
+            form = EditMenuItem() if entity.record == None else EditMenuItem(instance=entity.record)
+            return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
 
 def getEditMenuTree(request, appSession):
      # Get Entity configuration
-    entity = getEntity('menuTree', appSession, False)
-
+    entity = getEntity('menuTree', appSession)
     # Get Parameters
     idOperation = functions.getParmValue(appSession.parmList, "idOperation", "").upper()
-    idParent = functions.getParmValue(appSession.parmList, "idParent", "")
-    idChild = functions.getParmValue(appSession.parmList, "idChild", "")
-    idMenuTree = functions.getParmValue(appSession.parmList, "idMenuTree", "")
     try:
         if idOperation == "INSERT":
+            idParent = functions.getParmValue(appSession.parmList, "idParent", "")
+            idChild = functions.getParmValue(appSession.parmList, "idChild", "")
             # Create new record
             entity.record = AppMenuTree.objects.filter(parent = idParent).order_by('order').last()
             entity.record.id = None
@@ -214,16 +208,23 @@ def getEditMenuTree(request, appSession):
             entity.record.order += 10
             entity.record.save()
         else:
+            idMenuTree = functions.getParmValue(appSession.parmList, "idMenuTree", "")
             # Get existing record
             if getRecord(appSession, entity, [idMenuTree]):
                 match idOperation:
                     case "DELETE":
                         # Delete existing record
                         entity.record.delete()
-                    case "SWITCHUP":
-                        raise Exception('SWITCHUP')
-                    case "SWITCHDOWN":
-                        raise Exception('SWITCHDOWN')
+                    case "SWITCH":
+                        idSwitch = functions.getParmValue(appSession.parmList, "idSwitch", "")
+                        # Switch order between two records
+                        switchEntity = getEntity('menuTree', appSession)
+                        if getRecord(appSession, switchEntity, [idSwitch]):
+                            idSwitchOrder = entity.record.order
+                            entity.record.order = switchEntity.record.order
+                            entity.record.save()
+                            switchEntity.record.order = idSwitchOrder
+                            switchEntity.record.save()
     except Exception as Ex:
         # Error updating record
         appSession.errors.append(functions.getException(Ex))
@@ -232,7 +233,7 @@ def getEditMenuTree(request, appSession):
 
 def getEditColor(request, appSession):
      # Get Entity configuration
-    entity = getEntity('color', appSession, False)
+    entity = getEntity('color', appSession)
     # Get record
     idColor = appSession.parmList.get("idColor")
     if not getRecord(appSession, entity, [idColor]):
@@ -240,7 +241,6 @@ def getEditColor(request, appSession):
         return getListColor(request, appSession)
     else:
         if request.method == "POST":
-            # Update record
             try:
                 form = EditColor(request.POST)
                 if 'deletecolor' in request.POST:
@@ -251,7 +251,7 @@ def getEditColor(request, appSession):
                         if entity.record != None:
                             if str(entity.record.modification) != str(request.POST.get("modification")):
                                 # The record was changed by another user
-                                appSession.errors.append('¡Registro modificado por otro usuario!')
+                                appSession.errors.append('¡El Registro ha sido modificado por otro usuario!')
                             else:
                                 # Change existing record
                                 entity.record = form.save(commit=False)
@@ -266,22 +266,20 @@ def getEditColor(request, appSession):
                             entity.record.save()
                     else:
                         # Errors in Form
-                        raise Exception('Errores en el formulario')
-                # Go back to data list
-                return getListColor(request, appSession)
+                        appSession.errors.append('¡Errores en el formulario!')
             except Exception as Ex:
                 # Error updating record
-                #del entity.record
                 appSession.errors.append(functions.getException(Ex))
-        #else:
-        # Send data to form, if exists
-        form = EditColor(initial={'value': '#000000',}) if entity.record == None else EditColor(instance=entity.record)
-
-    return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
+            # Go back to data list
+            return getListColor(request, appSession)
+        else:
+            # Send data to form, if exists
+            form = EditColor(initial={'value': '#000000',}) if entity.record == None else EditColor(instance=entity.record)
+            return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
 
 def getEditLetter(request, appSession):
      # Get Entity configuration
-    entity = getEntity('letter', appSession, False)
+    entity = getEntity('letter', appSession)
     # Get record
     idLetter = appSession.parmList.get("idLetter")
     if not getRecord(appSession, entity, [idLetter]):
@@ -300,7 +298,7 @@ def getEditLetter(request, appSession):
                         if entity.record != None:
                             if str(entity.record.modification) != str(request.POST.get("modification")):
                                 # The record was changed by another user
-                                appSession.errors.append('¡Registro modificado por otro usuario!')
+                                appSession.errors.append('¡El Registro ha sido modificado por otro usuario!')
                             else:
                                 # Change existing record
                                 entity.record = form.save(commit=False)
@@ -315,22 +313,20 @@ def getEditLetter(request, appSession):
                             entity.record.save()
                     else:
                         # Errors in Form
-                        raise Exception('Errores en el formulario')
-                # Go back to data list
-                return getListLetter(request, appSession)
+                        appSession.errors.append('¡Errores en el formulario!')
             except Exception as Ex:
                 # Error updating record
-                #del entity.record
                 appSession.errors.append(functions.getException(Ex))
+            # Go back to data list
+            return getListLetter(request, appSession)
         else:
             # Send data to form, if exists
             form = EditLetter() if entity.record == None else EditLetter(instance=entity.record)
-
-    return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
+            return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
 
 def getEditIcon(request, appSession):
      # Get Entity configuration
-    entity = getEntity('icon', appSession, False)
+    entity = getEntity('icon', appSession)
     # Get record
     idIcon = appSession.parmList.get("idIcon")
     if not getRecord(appSession, entity, [idIcon]):
@@ -349,7 +345,7 @@ def getEditIcon(request, appSession):
                         if entity.record != None:
                             if str(entity.record.modification) != str(request.POST.get("modification")):
                                 # The record was changed by another user
-                                appSession.errors.append('¡Registro modificado por otro usuario!')
+                                appSession.errors.append('¡El Registro ha sido modificado por otro usuario!')
                             else:
                                 # Change existing record
                                 entity.record = form.save(commit=False)
@@ -364,16 +360,14 @@ def getEditIcon(request, appSession):
                             entity.record.save()
                     else:
                         # Errors in Form
-                        raise Exception('Errores en el formulario')
-                # Go back to data list
-                return getListIcon(request, appSession)
+                        appSession.errors.append('¡Errores en el formulario!')
             except Exception as Ex:
                 # Error updating record
-                #del entity.record
                 appSession.errors.append(functions.getException(Ex))
+            # Go back to data list
+            return getListIcon(request, appSession)
         else:
             # Send data to form, if exists
             form = EditIcon() if entity.record == None else EditIcon(instance=entity.record)
-
-    return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
+            return render(request, 'private/edit/base.html', {'session': appSession, 'entity': entity, 'form': functions.getFormLabels(entity, form),})
 

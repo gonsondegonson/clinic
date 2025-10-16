@@ -80,22 +80,38 @@ class AppEntity(models.Model):
                 # Build 'edit record form' for modal maintenance
                 record.form = getFormLabels(self, formFunction(instance=record))
 
-
     def getTreeUrls(self, pathList, secret):
-        recordCount = 0
         self.selList = pathList
         for record in self.records:
-            recordCount += 1
             # Add 'List sub-records', 'Edit record' and 'Delete record' URLs for each record on the Entity Tree
             record.url = type('url', (), {
                   'list': None if not self.auth.view else getUrlEncoded((self.opt.list + '|idOperation=List|idParent=' + str(record.child.id) + '|pathList=' + pathList), secret),
                   'edit': None if not self.auth.add else getUrlEncoded((self.opt.edit + '|idOperation=Edit|' + record.optKey() + '|pathList=' + pathList), secret),
                 'delete': None if not self.auth.delete else getUrlEncoded((self.opt.edit + '|idOperation=Delete|' + record.optKey() + '|pathList=' + pathList), secret),
-                    'up': None if recordCount == 1 else getUrlEncoded((self.opt.edit + '|idOperation=SwitchUp|' + record.optKey() + '|pathList=' + pathList), secret),
-                  'down': None if recordCount == self.records.count() else getUrlEncoded((self.opt.edit + '|idOperation=SwitchDown|' + record.optKey() + '|pathList=' + pathList), secret)
            })
             # Add record id to the list of path records to exclude it in select for insert
             self.selList = self.selList + ',' + str(record.child.id)
+
+    def getUpDownUrls(self, pathList, secret):
+        recordPrev = None
+        for record in self.records:
+            if recordPrev == None:
+                # First record
+                record.prev = None
+            else:
+                # Next records
+                record.prev = recordPrev.id
+                recordPrev.next = record.id
+
+                recordPrev.url.up   = None if recordPrev.prev == None else getUrlEncoded((self.opt.edit + '|idOperation=Switch|' + recordPrev.optKey() + '|idSwitch=' + str(recordPrev.prev) + '|pathList=' + pathList), secret)
+                recordPrev.url.down = None if recordPrev.next == None else getUrlEncoded((self.opt.edit + '|idOperation=Switch|' + recordPrev.optKey() + '|idSwitch=' + str(recordPrev.next) + '|pathList=' + pathList), secret)
+
+            recordPrev = record
+
+        if recordPrev != None:
+            # Last record
+            recordPrev.url.up   = None if recordPrev.prev == None else getUrlEncoded((self.opt.edit + '|idOperation=Switch|' + recordPrev.optKey() + '|idSwitch=' + str(recordPrev.prev) + '|pathList=' + pathList), secret)
+            recordPrev.url.down = None
 
     def __str__(self):
         return self.label
